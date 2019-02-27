@@ -1,0 +1,23 @@
+import time
+alist = []
+number = (input("ENTER A NUMBER TO BE ADDED TO THE LIST"))
+print("ADDING NUMBER TO LIST")
+alist.append(number)
+time.sleep(0.4)
+print("ADDED NUMBER TO LIST")
+for i in range (8):
+    number2 = (input("ENTER A NUMBER TO BE ADDED TO THE LIST"))
+    print("ADDING NUMBER TO LIST")
+    alist.append(number2)
+    time.sleep(0.4)
+    print("ADDED NUMBER TO LIST")
+def bubbleSort(alist):
+    for passnum in range(len(alist)-1,0,-1):
+        for i in range(passnum):
+            if alist[i]>alist[i+1]:
+                temp = alist[i]
+                alist[i] = alist[i+1]
+                alist[i+1] = temp
+
+bubbleSort(alist)
+print(alist)

@@ -1,0 +1,4 @@
+Number = int(input('Type in a number'))
+if Number%3 == 0:
+    NewNumber = Number/3
+    print(NewNumber)

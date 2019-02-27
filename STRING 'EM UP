@@ -1,0 +1,13 @@
+MyList = []
+print("List of game characters")
+while True:
+    character = input("Would you like to add a character")
+    if character in ["y","Y","Yes","yes"]:
+        Character = input("What character would you like to add")
+        MyList.append(Character)
+        print("game character list:")
+        print(*MyList,sep=",")
+    if character in ["N","n","No","no"]:
+        print("Final list:")
+        print(*MyList,sep=",")
+        break

@@ -1,0 +1,20 @@
+import tkinter
+import random
+
+window = tkinter.Tk()
+
+def RandomName():
+    Names = ["Noah", "Luke", "Henry", "Andrew", "Isaac", "Christopher", "Joshua", "Wyatt", "Sebastian", "Owen", "Caleb", "Nathan", "Ryan", "Jack", "Hunter", "Levi", "Christian", "Jaxon", "Julian", "Landon", "Grayson", "Jonathan", "Isaiah", "Charles", "Thomas", "Aaron", "Eli", "Connor", "Jeremiah", "Cameron", "Josiah", "Adrian", "Colton", "Jordan", "Brayden", "Nicholas", "Robert", "Angel", "Hudson", "Lincoln", "Evan", "Dominic", "Austin", "Gavin"]
+    MyRandom = random.choice(Names)
+    dice_thrown.configure(text="Dice thrown:" + MyRandom)
+
+MyTitle = tkinter.Label(window, text="random Name Picker", font= "Heletica 16 bold")
+MyTitle.pack()
+
+MyButton = tkinter.Button(window, text="OK", command=RandomName)
+MyButton.pack()
+
+dice_thrown = tkinter.Label(window, font="Helvetica 16 bold")
+dice_thrown.pack()
+
+window.mainloop()

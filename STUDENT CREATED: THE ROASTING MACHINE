@@ -1,0 +1,4 @@
+import random
+name = input("What is the students name that you want to roast")
+insult = random.choice(["you are as fat as Harris","you have an IQ of 0"])
+print("well",name,insult)

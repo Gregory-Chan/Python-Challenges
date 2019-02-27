@@ -1,0 +1,21 @@
+print("Rugby Calculator")
+team_1 = input("what is the name of the first rugby team")
+team_2 = input("what is the name of the second rugby team")
+a = int(input("How many trys did team 1 get?"))
+b = int(input("How many conversions did team 1 get?"))
+c = int(input("how many penalty kicks did team 1 score?"))
+x = int(input("How many trys did team 2 get?"))
+y = int(input("How many conversions did team 2 get?"))
+z = int(input("how many penalty kicks did team 2 score?"))
+
+aa = a * 5
+bb = b * 2
+cc = c * 3
+xx = x * 5
+yy = y * 2
+zz = z * 3
+abc = aa + bb + cc
+xyz = xx + yy + zz
+
+print (team_1, "scored", a, "trys", b, "conversions", c, "penalty kicks," " and had a total of" , abc, "points")
+print (team_2, "scored", x, "trys", y, "conversions", z, "penalty kicks," " and had a total of" , xyz, "points")

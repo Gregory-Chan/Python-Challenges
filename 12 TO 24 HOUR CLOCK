@@ -1,0 +1,8 @@
+Hour = int(input('What hour is it now'))
+Minute = int(input('what minute is it now'))
+Time = input('Is it AM/PM')
+if Time in ['AM',"am"]:
+    print(Hour,Minute)
+if Time in ["PM","pm"]:
+    NewHour = 12 + Hour
+    print(('The time is %d:%d',Time) % (NewHour,Minute))

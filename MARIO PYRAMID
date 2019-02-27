@@ -1,0 +1,5 @@
+n = input("Enter Height of Pyramid: ")
+height = int(n)
+
+for i in range(height):
+    print (" "*(height-1*i)+("#")+("#"*(1*i)))

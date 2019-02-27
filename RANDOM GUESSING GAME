@@ -1,0 +1,19 @@
+import random
+numberguess = random.randrange(0,100)
+MyGuess = int(input("The computer has picked a number between 0 and 100 guess that number."))
+if MyGuess == numberguess:
+    print("You actually got it on your first try")
+else:
+    running = True
+    MyGuess2 = int(input("so you did not get it on your first try.""It is ok just keep guessing, but this time we will help you. But just give it another go."))
+    if MyGuess2 == numberguess:
+        print("good job you got it on your second try")
+    while running:
+        MyGuess3 = int(input("try again"))
+        if MyGuess3 <= numberguess:
+            print("higher than that")
+        if MyGuess3 >= numberguess:
+            print("lower than that")
+        if MyGuess3 == numberguess:
+            running = False
+            print("The computer's number is",numberguess,"I knew you could get there eventually")

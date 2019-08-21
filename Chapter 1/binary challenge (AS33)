@@ -1,0 +1,35 @@
+import random
+Choice1 = int(input("Which type of quiz do you want 1)Binary or 2) Hex?"))
+lives = int(input("How many chances do you want to have"))
+Decimal = random.randint(0,255)
+Binary = bin(Decimal)
+Hex = hex(Decimal)
+x = 0
+if Choice1 == 1:
+    print(Binary[2::])
+    print("Convert that into Denary")
+    while True:
+        choice = int(input("What is your answer?"))
+        if choice == Decimal:
+            print("That is correct")
+            break
+        else:
+            print("That is incorrect")
+            x += 1
+            if x == lives:
+                print("you are out of lives")
+                break
+if Choice1 == 2:
+    print(Hex[2::])
+    print("Conver that into Denary")
+    while True:
+        choice = int(input("what is your answer?"))
+        if choice == Decimal:
+            print("That is correct")
+            break
+        else:
+            print("That is incorrect")
+            x += 1
+            if x ==lives:
+                print('you are out of lives')
+                break

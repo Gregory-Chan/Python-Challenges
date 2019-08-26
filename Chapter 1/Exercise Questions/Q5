@@ -1,0 +1,7 @@
+P = 10000
+r = 8
+n = 12
+t = int(input("Enter the number of years"))
+
+A = P*(1+ r/n)**(n*t)
+print(A)

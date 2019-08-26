@@ -1,0 +1,18 @@
+x = int(input("what is the current time?"))
+y = int(input("is it am or pm?(1 for am,2 for pm)"))
+z = int(input("how many hours do you want to wait"))
+
+y = y - 1
+
+a = x + z
+if a > 12:
+    a = a - 12
+    y = y + 1
+    if y == 2:
+        y == 0
+if y == 0:
+    print("the time will be",a," am")
+elif y ==1:
+    print("the time will be",a,"pm")
+else:
+    print("ERROR")

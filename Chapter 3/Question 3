@@ -1,0 +1,5 @@
+#Write a program that uses a for loop to print
+#One of the months of the year is January and so on
+month = ['January','February','March','April','May','June','July','August','September','October','November','December']
+for i in month:
+    print("One of the months of the year is",i)

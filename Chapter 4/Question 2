@@ -1,0 +1,19 @@
+import turtle
+tom = turtle.Turtle()
+tom.speed(100)
+def square(a):
+    for i in range(4):
+        tom.forward(a)
+        tom.left(90)
+def jump(a):
+    tom.penup()
+    tom.right(135)
+    tom.forward(a)
+    tom.pendown()
+
+size = 20
+for i in range(5):
+    tom.setheading(0)
+    square(size)
+    jump(15)
+    size = size + 20

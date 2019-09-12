@@ -34,8 +34,12 @@ if choice1 == 1:
     total = card1+card2+card3
     print("YOU CARDS ARE:",number[card1],"AND",number[card2],"AND",number[card3],"TOTAL",total)
 elif choice1 == 2:
-    if total > total2:
-        print
+    if card1+card2 > total2:
+        print("YOU HAVE WON")
+    elif card1+card2 == total2:
+        print("YOU HAVE TIED")
+    else:
+        print("YOU HAVE LOST")
     exit()
 if total >21:
     print("YOU HAVE BUST")
@@ -45,6 +49,12 @@ if choice2 == 1:
     total = card1+card2+card3+card4
     print("YOU CARDS ARE:",number[card1],"AND",number[card2],"AND",number[card3],"AND",number[card4],"TOTAL",total)
 elif choice2 ==2:
+    if card1+card2+card3 > total2:
+        print("YOU HAVE WON")
+    elif card1+card2 == total2:
+        print("YOU HAVE TIED")
+    else:
+        print("YOU HAVE LOST")
     exit()
 if total >21:
     print("YOU HAVE BUST")
@@ -54,7 +64,16 @@ if choice3 == 1:
     total = card1+card2+card3+card4+card5
     print("YOU CARDS ARE:",number[card1],"AND",number[card2],"AND",number[card3],"AND",number[card4],"AND",number[card5],"TOTAL",total)
 elif choice3 == 2:
+    if card1+card2+card3+card4 > total2:
+        print("YOU HAVE WON")
+    elif card1+card2 == total2:
+        print("YOU HAVE TIED")
+    else:
+        print("YOU HAVE LOST")
     exit()
 if total >21:
     print("YOU HAVE BUST")
+    exit()
+else:
+    "YOU HAVE WON"
     exit()

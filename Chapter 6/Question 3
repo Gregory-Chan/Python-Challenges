@@ -30,6 +30,7 @@ def day_num(x):
         return 5
     if x == "Sunday":
         return 6
+    return None
 
 def test(did_pass):
     """  Print the result of a test.  """

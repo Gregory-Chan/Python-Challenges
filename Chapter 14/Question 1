@@ -1,1 +1,5 @@
-awd
+def search_linear(x, target):
+    for (i, v) in enumerate(x):
+       if v == target:
+           return i
+    return "none found"

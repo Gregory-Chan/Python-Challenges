@@ -1,0 +1,10 @@
+def insertion_sort(a):
+    x = 0
+    y = 0
+    for i in len(a):
+        x = a[i]
+        y = i
+        while y > 0 and a[y-1] > x:
+            a[y] = a[y-1]
+            y = y - 1
+        a[y] = x

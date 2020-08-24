@@ -1,0 +1,6 @@
+x = int(input("ENTER X VALUE"))
+y = int(input("ENTER Y VALUE"))
+z = int(input("ENTER Z VALUE"))
+
+result = (x+y)**z
+print(result)

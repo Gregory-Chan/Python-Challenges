@@ -8,7 +8,7 @@ tess.color("blue")
 
 def Sierpinski(t, order, size):
     if order == 0:
-        for angle in range(3): # basic case
+        for angle in range(3):
             t.forward(size)
             t.left(120)
     else:

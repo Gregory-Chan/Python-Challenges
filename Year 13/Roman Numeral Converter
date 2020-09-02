@@ -13,4 +13,14 @@ def numberToRoman(number):
                 number -= i
 
     return roman
-    
+
+def RomanTonumber(roman):
+    string = [char for char in roman]
+    number = 0
+    for a in string:
+        for i, r in number_map:
+            if a == r:
+                number += i
+
+
+    return number

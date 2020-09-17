@@ -1,0 +1,2 @@
+for i in range (0,100):
+    print(100-i, "bottles of cola on the wall",100-i, "bottles of cola, take on down, pass it around.")

@@ -10,13 +10,13 @@ for letter in "Mississippi":
 
 print(letter_counts)
 
-kishans_counter = {}
+counter = {}
 what_word = input(str("Please enter a string!"))
 for alphabet in what_word:
-    kishans_counter[alphabet] = kishans_counter.get(alphabet,0)+1
-    alphabet_items = list(kishans_counter.items())
+    counter[alphabet] = counter.get(alphabet,0)+1
+    alphabet_items = list(counter.items())
     alphabet_items.sort()
-print(alphabet_items) #To show the process of each step
+print(alphabet_items)
 
 d = {"apples":15, "bananas":35, "grapes":12}
 print(d["bananas"])

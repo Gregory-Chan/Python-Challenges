@@ -1,0 +1,3 @@
+str = str(input("Enter word?"))
+reversed_string = str[::-1]
+print(reversed_string)

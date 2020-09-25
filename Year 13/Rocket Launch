@@ -1,0 +1,10 @@
+import math
+class planet:
+    
+    def __init__(self,mass,radius):
+        self.mass = mass
+        self.radius = radius
+        
+    def escape_velocity(self):
+        escape_velocity = math.sqrt((2*6.67*10**-11*self.mass)/self.radius)
+        return escape_velocity

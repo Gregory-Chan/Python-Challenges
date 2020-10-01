@@ -1,0 +1,34 @@
+import random
+
+ops = {
+  "+": (lambda a, b: a + b),
+  "-": (lambda a, b: a - b),
+  "*": (lambda a, b: a * b),
+  "/": (lambda a, b: a / b)
+}
+
+
+def eval(expression):
+  tokens = expression.split()
+  stack = []
+
+  for token in tokens:
+    if token in ops:
+      arg2 = stack.pop()
+      arg1 = stack.pop()
+      result = ops[token](arg1, arg2)
+      stack.append(result)
+    else:
+      stack.append(int(token))
+
+  return stack.pop()
+questions = ['6 2 3 4 - + +', '6 2 3 4 - +', '2 3 + 5 -', '5 2 4 5 7 1 +']
+random_question = random.choice(questions)
+
+print("THE QUESTION IS: ", random_question)
+answer = int(input("Your answer:"))
+
+if eval(random_question) == answer:
+    print("Correct")
+else:
+    print("Wrong")

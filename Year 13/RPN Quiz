@@ -26,7 +26,7 @@ questions = ['6 2 3 4 - + +', '6 2 3 4 - +', '2 3 + 5 -', '5 2 4 5 7 1 +']
 random_question = random.choice(questions)
 
 print("THE QUESTION IS: ", random_question)
-answer = int(input("Your answer:"))
+answer = int(input("Answer:"))
 
 if eval(random_question) == answer:
     print("Correct")

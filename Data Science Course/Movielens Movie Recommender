@@ -1,0 +1,216 @@
+##########################################################
+# Create edx set, validation set (final hold-out test set)
+##########################################################
+
+# Note: this process could take a couple of minutes
+
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
+if(!require(data.table)) install.packages("data.table", repos = "http://cran.us.r-project.org")
+
+library(tidyverse)
+library(caret)
+library(data.table)
+
+# MovieLens 10M dataset:
+# https://grouplens.org/datasets/movielens/10m/
+# http://files.grouplens.org/datasets/movielens/ml-10m.zip
+
+dl <- tempfile()
+download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
+
+ratings <- fread(text = gsub("::", "\t", readLines(unzip(dl, "ml-10M100K/ratings.dat"))),
+                 col.names = c("userId", "movieId", "rating", "timestamp"))
+
+movies <- str_split_fixed(readLines(unzip(dl, "ml-10M100K/movies.dat")), "\\::", 3)
+colnames(movies) <- c("movieId", "title", "genres")
+
+# if using R 4.0 or later
+movies <- as.data.frame(movies) %>% mutate(movieId = as.numeric(movieId),
+                                           title = as.character(title),
+                                           genres = as.character(genres))
+
+movielens <- left_join(ratings, movies, by = "movieId")
+
+# Validation set will be 10% of MovieLens data
+set.seed(1, sample.kind="Rounding")
+# if using R 3.5 or earlier, use `set.seed(1)` instead
+test_index <- createDataPartition(y = movielens$rating, times = 1, p = 0.1, list = FALSE)
+edx <- movielens[-test_index,]
+temp <- movielens[test_index,]
+
+# Make sure userId and movieId in validation set are also in edx set
+validation <- temp %>% 
+  semi_join(edx, by = "movieId") %>%
+  semi_join(edx, by = "userId")
+
+# Add rows removed from validation set back into edx set
+removed <- anti_join(temp, validation)
+edx <- rbind(edx, removed)
+
+rm(dl, ratings, movies, test_index, temp, movielens, removed)
+
+# Additional Packages
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(rmarkdown)
+
+####### Data Cleaning #######
+
+# Converting Timestamp into a more readable date on both data sets
+
+edx$date <- as.POSIXct(edx$timestamp, origin="1970-01-01")
+validation$date <- as.POSIXct(validation$timestamp, origin="1970-01-01")
+
+edx$Rating_Year <- format(edx$date,"%Y")
+validation$Rating_Year <- format(validation$date,"%Y")
+edx$Rating_Month <- format(edx$date,"%m")
+validation$Rating_Month <- format(validation$date,"%m")
+
+# Convert the data type to numeric
+
+edx$Rating_Year <- as.numeric(edx$Rating_Year)
+validation$Rating_Year <- as.numeric(validation$Rating_Year)
+edx$Rating_Month <- as.numeric(edx$Rating_Month)
+validation$Rating_Month <- as.numeric(validation$Rating_Month)
+
+####### Data Exploration #######
+
+# Rating per genre
+
+edx %>% separate_rows(genres, sep = "\\|") %>%
+  group_by(genres) %>%
+  summarize(count=n()) %>%
+  arrange(desc(count))
+
+# Box plot of rating distribution per genre
+
+edx %>% 
+  separate_rows(genres, sep = "\\|") %>% 
+  select(genres, rating) %>% 
+  group_by(genres) %>%
+  ggplot(aes(x=factor(genres),y=rating,fill=genres)) +
+  geom_boxplot() +
+  theme(axis.text.x=element_text(angle = 90,hjust = 1)) +
+  xlab("Film Genre") +
+  ylab("Film Rating") 
+
+# Distribution of User ratings
+
+Total_Ratings <- edx %>%
+  mutate(Rating= as.factor(rating)) %>% 
+  group_by(Rating) %>%
+  summarise(Rating_Total=n()) %>%
+  mutate(P = (Rating_Total/sum(Rating_Total))*100) %>%
+  select(Rating,Rating_Total,P)
+
+ggplot(Total_Ratings, aes(Rating,Rating_Total)) +
+  geom_bar(stat = "identity") +
+  xlab("Rating") +
+  ylab("Frequency") + 
+  ggtitle("Distribution of User Ratings")
+
+# Number of ratings for top 20 movies
+
+edx %>%
+  group_by(title) %>%
+  summarise(count=n()) %>%
+  arrange(desc(count)) %>%
+  head(n=20) %>%
+  ggplot(aes(title, count)) +
+  geom_col() + 
+  xlab("Rating") +
+  ylab("Number of Ratings") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10)) +
+  ggtitle("Number of ratings for top 20 movies")
+
+# Top 20 movies with the highest mean rating
+
+edx %>% 
+  mutate(rating=as.numeric(rating)) %>%
+  select(title,rating) %>%
+  group_by(title) %>%
+  summarise(count=n(),mean=mean(rating)) %>%
+  ungroup() %>%
+  arrange(desc(mean)) %>%
+  head(n=20)
+
+####### Modeling #######
+
+# Function to calculate RMSE
+
+RMSE <- function(true_ratings, predicted_ratings){
+  sqrt(mean((true_ratings-predicted_ratings)^2))
+}
+
+# Model 1 which uses movie rating
+
+mu_hat <- mean(edx$rating)
+movie_avg <- edx %>%
+  group_by(movieId) %>%
+  summarize(b_i=mean(rating-mu_hat))
+
+# Predict ratings
+
+RMSE_model_1 <- edx %>%
+  left_join(movie_avg,by="movieId") %>%
+  mutate(result=mu_hat+b_i) %>%
+  pull(result)
+
+# Testing  model 1
+
+RMSE_model_1_test_result <- RMSE(edx$rating,RMSE_model_1)
+
+# Add results to table
+results <- data.frame(Model="Movie Model Testing",RMSE=RMSE_model_1_test_result)
+
+# Model 2 which removes bias of movie, user and genre
+
+mu_hat <- mean(edx$rating)
+movie_avg <- edx %>%
+  group_by(movieId) %>%
+  summarize(b_i=mean(rating-mu_hat))
+user_avg <- edx %>%
+  left_join(movie_avg,by="movieId") %>%
+  group_by(userId) %>%
+  summarize(b_u=mean(rating-mu_hat-b_i))
+genre_avg <- edx %>%
+  left_join(movie_avg,by="movieId") %>%
+  left_join(user_avg,by="userId") %>%
+  group_by(genres) %>%
+  summarize(b_ug=mean(rating-mu_hat-b_i-b_u))
+
+# Predict ratings
+
+RMSE_model_2 <- edx %>%
+  left_join(movie_avg,by="movieId") %>%
+  left_join(user_avg,by="userId") %>%
+  left_join(genre_avg,by="genres") %>%
+  mutate(result=mu_hat+b_i+b_u+b_ug) %>%
+  pull(result)
+
+# Testing model 2
+
+RMSE_model_2_test_result <- RMSE(edx$rating,RMSE_model_2)
+
+# Add results to table
+
+results <- results %>% add_row(Model="Movie+User+Genre Model Testing",RMSE=RMSE_model_2_test_result)
+
+# Validating model 2 using validation set
+
+RMSE_model_2_validated <- validation %>%
+  left_join(movie_avg,by="movieId") %>%
+  left_join(user_avg,by="userId") %>%
+  left_join(genre_avg,by="genres") %>%
+  mutate(result=mu_hat+b_i+b_u+b_ug) %>%
+  pull(result)
+
+RMSE_model_2_result <- RMSE(validation$rating,RMSE_model_2_validated)
+
+# Add results to table
+
+results <- results %>% add_row(Model="Movie+User+genre Model validation", RMSE=RMSE_model_2_result)

@@ -1,0 +1,135 @@
+##### Installing packages
+
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+if(!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
+if(!require(tidyr)) install.packages("tidyr", repos = "http://cran.us.r-project.org")
+if(!require(knitr)) install.packages("knitr", repos = "http://cran.us.r-project.org")
+if(!require(corrplot)) install.packages("corrplot", repos = "http://cran.us.r-project.org")
+
+##### Loading Libraries #####
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(rmarkdown)
+library(corrplot)
+
+##### Loading Data #####
+
+boston_data <- read.csv("Boston_Housing_Data.csv")
+
+##### Data Cleaning #####
+
+class(boston_data)
+any(is.na(boston_data))
+summary(boston_data)
+str(boston_data)
+
+# Correlation graph #
+cor_graph <- cor(boston_data)
+corrplot(cor_graph, method = "circle") 
+
+# Replace NA values with the median value of variable #
+
+boston_data$CRIM[which(is.na(boston_data$CRIM))] <- median(boston_data$CRIM, na.rm= T)
+boston_data$ZN[which(is.na(boston_data$ZN))] <- median(boston_data$ZN, na.rm= T)
+boston_data$INDUS[which(is.na(boston_data$INDUS))] <- median(boston_data$INDUS, na.rm= T)
+boston_data$CHAS[which(is.na(boston_data$CHAS))] <- median(boston_data$CHAS, na.rm= T)
+boston_data$AGE[which(is.na(boston_data$AGE))] <- median(boston_data$AGE, na.rm= T)
+boston_data$LSTAT[which(is.na(boston_data$LSTAT))] <- median(boston_data$LSTAT, na.rm= T)
+
+summary(boston_data)
+
+# Removing outliers #
+
+# List to sotre outliers
+outliers <-  c()
+# list of variables
+list <- c("CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS", "RAD", 
+               "TAX", "PTRATIO", "B", "LSTAT", "MEDV")
+for(variable in list){
+  
+  #Find the min and max values
+  max <- quantile(boston_data[,variable], 0.95, na.rm=TRUE) + (IQR(boston_data[,variable],na.rm=TRUE))
+  min <- quantile(boston_data[,variable],0.05,na.rm=TRUE) -  (IQR(boston_data[,variable],na.rm=TRUE))
+  
+  #Get row id of outliers
+  id <- which(boston_data[,variable] < min| boston_data[,variable] > max)
+  
+  #Add outliers to outliers list
+  outliers <- c(outliers, id)
+}
+
+#sorting the outliers
+outliers <- sort(outliers)
+
+#remove outliers from boston_data
+boston_data <- boston_data[-outliers,]
+
+# Convert CHAS and RAD to factor data type#
+
+boston_data$CHAS <- as.factor(boston_data$CHAS)
+boston_data$RAD <- as.factor(boston_data$RAD)
+levels(boston_data$RAD) <- c(1,2,3,4,5,6,7,8,24) 
+
+##### Data Exploration #####
+
+# scatterplot of some of the important variables #
+
+plot(boston_data[,c(3,5,6,11,13,14)],pch=3)
+
+# Histograms of some important variables Variables #
+
+# (CRIM) Crime rate per town
+hist(boston_data$CRIM)
+
+# (RM) Average number of rooms
+hist(boston_data$RM)
+
+# (CHAS) Bound the Charles river or not
+hist(boston_data$CHAS)
+
+# (TAX) full-value property-tax rate per $10,000
+hist(boston_data$TAX)
+
+####### Modeling #######
+
+# Partition the boston_data dataset into to a 7/3 ratio as training/test datasets #
+
+set.seed(12345)
+data <- sample(1:nrow(boston_data), 0.7*nrow(boston_data))
+train_data <- boston_data[data,]
+test_data <- boston_data[-data,]
+
+# Model 1 which is a linear model #
+
+#Uses MEDV as independent variable
+set.seed(12345)
+model_1 <- lm(MEDV~.,data = train_data)
+
+# Predict values
+RMSE_model_1 <- predict(model_1, new_data = test_data)
+
+# Testing  model 1
+RMSE_model_1_testing_result <- sqrt(sum((RMSE_model_1 - test_data$MEDV)^2)/length(test_data$MEDV))
+
+# Add results to table
+results <- data.frame(Model="House Price Model 1 Testing",RMSE=RMSE_model_1_testing_result)
+
+# Model 2 which is a linear model #
+
+#Uses log(MEDV) as independent variable
+set.seed(12345)
+model_2 <- lm(log(MEDV)~.,data = train_data)
+
+#predict Value
+RMSE_model_2<- predict(model_2, newdata = test_data)
+
+# Root-mean squared error
+RMSE_model_2_testing_result <- sqrt(sum((exp(RMSE_model_2) - test_data$MEDV)^2)/length(test_data$MEDV))
+
+# Add results to table
+results <- results %>% add_row(Model="House Price model 2 Testing",RMSE=RMSE_model_2_testing_result)

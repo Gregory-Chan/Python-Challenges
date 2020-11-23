@@ -11,4 +11,10 @@ class Tree:
         if tree is None: return
         print(tree.cargo, end=" ")
         print_tree(tree.left)
-        print_tree(tree.right)    
+        print_tree(tree.right)
+        
+    def print_tree_inorder(tree):
+        if tree is None: return
+        print_tree_inorder(tree.left)
+        print(tree.cargo, end=" ")
+        print_tree_inorder(tree.right)

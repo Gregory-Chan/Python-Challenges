@@ -1,5 +1,5 @@
-names(harris,male).
-names(isaac,male).
+names(harris, male).
+names(isaac, male).
 
-recipe(toast,bread,_).
-recipe(chicken_soup,chicken,_).
+recipe(toast, bread, _).
+recipe(chicken_soup, chicken, _).
